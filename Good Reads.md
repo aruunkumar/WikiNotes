@@ -1,7 +1,7 @@
 # Good Reads
  
 1. Know what’s important… and eliminate the rest. In order to do this, you must take time to identify the most important things in your life. Choose activities, tasks, projects and commitments that correlate with that list. At the start of each day, take time to identify 1-3 Most Important Tasks (MITs).
-2. Visualize your perfect day. This is not a time to daydream. I want to fly across the world and stay in a five-star hotel with an infinity pool, is not an acceptable answer. Be realistic! For some, it’s taking a yoga class before work. For others, it’s being able to have a sit down dinner with their family. Understand what a simple day means to you.
+2. Visualize your perfect day. This is not a time to daydream. I want to fly across the world and stay in a five-star hotel with an infinity pool, is not an acceptable answer. Be realistic! What time would you get up in the morning? What would you do first? What would you accomplish? Who would you be with? Visualizing your ideal day and committing that vision to paper will help you “work smarter, think bigger and make more.”
 3. Don’t overcommit. Now that you’ve identified what’s important, you need to learn how to say “no” to things that stand in the way of your perfect day. List and prioritize your commitments, and say no to at least one.
 4. Limit tasks. In addition to your 1-3 MITs, list other tasks that you’d like to do. See if you can limit this list to 5-7 tasks per day. It is OK to say no to some of them -- you can’t do it all in a day. Limiting tasks helps you focus on what’s important.
 5. Remain focused. When are you going to do your most important work? Schedule it with a block of time. Make this your most sacred appointment. During this timeframe, remember to close the internet and turn off your phone.
@@ -9,6 +9,7 @@
 7. Don’t multitask. Instead, focus on one task at a time. Practice mindfulness as you do the task. Be conscious of wandering thoughts and redirect them as needed. Your day will be much simpler -- and more enjoyable -- when you practice being present.
 8. Batch small tasks. Set aside time to respond to e-mails, file paperwork, make minor phone calls, etc. Make sure you do this later in the day, after you’ve already completed your important tasks.
 9. Free up space. We have a propensity to cram. Instead, leave a little space in between meetings, appointments, and tasks. This will allow you time to stretch, walk around, get a glass of water, or meditate. Enjoy this space!
+10. Make a “stop doing” list of the tasks you plan to quit, so you can focus time and energy on your MITs.
 *   From <https://wl.lifecare.com/group/guest/Article?title=9-Rules-for-a-Simpler-Day&journalEntry=94139073&journalResourcePrimKey=230692&email=y>   
 
 ### How to Train Your Brain to Remember Almost Anything
