@@ -1,59 +1,42 @@
-resource "aws_security_group" "appstream_fleet" {
-  name        = "${var.name_prefix}appstream_fleet_sg"
-  description = "AppStream Fleet Security Group"
-  vpc_id      = var.vpc_id
-
-  ingress {
-    description      = "Allow Https"
-    from_port        = 443
-    to_port          = 443
-    protocol         = "tcp"
-    cidr_blocks      = var.security_group_cidrs
-  }
-
-  egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-  }
-
-  tags = merge(var.default_tags, {
-    Name = "${var.name_prefix}appstream_fleet_sg"
-  })
-
+variable "vpc_id" {
+  description = "Value of the VPC ID"
+  type        = string
 }
 
-resource "aws_appstream_fleet" "application_fleet" {
-  name = "${var.name_prefix}appstream_fleet"
+variable "subnet_id" {
+  description = "ID of the subnet in which the image builder needs to be created"
+  type        = string
+}
 
-  compute_capacity {
-    desired_instances = var.desired_fleet_instances_count
-  }
+variable "image_name" {
+  description = "Name of the image"
+  type        = string
+  default     = "AppStream-WinServer2019-03-03-2022"
+}
 
-  description                        = "AppStream fleet for application client"
-  display_name                       = "AppStream fleet for application client"
-  enable_default_internet_access     = false
-  fleet_type                         = var.fleet_type
-  image_name                         = var.image_name
-  instance_type                      = var.instance_type
-  max_user_duration_in_seconds       = var.max_user_duration_in_seconds
-  disconnect_timeout_in_seconds      = var.disconnect_timeout_in_seconds
-  idle_disconnect_timeout_in_seconds = var.idle_disconnect_timeout_in_seconds
+variable "instance_type" {
+  description = "Type and size of the image builder instance"
+  type        = string
+  default     = "stream.standard.medium"
+}
 
-  vpc_config {
-    subnet_ids         = var.subnet_ids
-    security_group_ids = [aws_security_group.appstream_fleet.id]
-  }
+variable "vpce_id" {
+  description = "ID of the VPC Endpoint through which traffic will flow to the image builder"
+  type        = string
+}
 
-  # domain_join_info {
-  #  directory_name = 
-  # }
+variable "security_group_cidrs" {
+  description = "The CIDRs to which traffic can be routed"
+  type        = list(string)
+}
 
-  # iam_role_arn = 
+variable "name_prefix" {
+  description = "Prefix for resource names and tags"
+  default     = ""
+}
 
-  tags = merge(var.default_tags, {
-    Name = "${var.name_prefix}appstream_fleet"
-  })
-
+variable "default_tags" {
+  description = "Map of default tags required by FIS Sentinel policies"
+  type = map(string)
+  default = {}
 }
