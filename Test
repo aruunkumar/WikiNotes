@@ -1,64 +1,67 @@
-module "appstream_vpc_endpoint" {
-  source               = "./modules/vpc-endpoint"
-  vpc_id               = data.aws_vpc.app_vpc.id
-  aws_region           = data.aws_region.current.id
-  subnet_ids           = toset(data.aws_subnets.front_end_subnets.ids)
-  security_group_cidrs = [for s in data.aws_subnet.routable_front_end : s.cidr_block]
-  name_prefix          = local.name_prefix
-  default_tags         = local.default_tags
+variable "vpc_id" {
+  description = "Value of the VPC ID"
+  type        = string
 }
 
-module "appstream_image_builder" {
-  source               = "./modules/appStream/appstream-image-builder"
-  vpc_id               = data.aws_vpc.app_vpc.id
-  subnet_id            = data.aws_subnets.app_subnets.ids[0]
-  image_name           = local.image_builder_base_image_name
-  instance_type        = local.image_builder_instance_type
-  vpce_id              = module.appstream_vpc_endpoint.id
-  security_group_cidrs = [for s in data.aws_subnet.routable_front_end : s.cidr_block]
-  name_prefix          = local.name_prefix
-  default_tags         = local.default_tags
-
-  depends_on = [
-    module.appstream_vpc_endpoint
-  ]
+variable "subnet_ids" {
+  description = "IDs of the subnets in which the image builder needs to be created"
+  type        = list(string)
 }
 
-module "appstream_fleet" {
-  source                             = "./modules/appstream/appStream-fleet"
-  vpc_id                             = data.aws_vpc.app_vpc.id
-  subnet_ids                         = toset(data.aws_subnets.app_subnets.ids)
-  fleet_type                         = local.fleet_type
-  desired_fleet_instances_count      = local.desired_fleet_instances_count
-  max_user_duration_in_seconds       = local.fleet_max_user_duration_in_seconds
-  disconnect_timeout_in_seconds      = local.fleet_disconnect_timeout_in_seconds
-  idle_disconnect_timeout_in_seconds = local.fleet_idle_disconnect_timeout_in_seconds
-  image_name                         = local.fleet_image_name
-  instance_type                      = local.fleet_instance_type
-  security_group_cidrs               = [for s in data.aws_subnet.routable_front_end : s.cidr_block]
-  name_prefix                        = local.name_prefix
-  default_tags                       = local.default_tags
+variable "fleet_type" {
+  description = "Type of the fleet instance that determines the start-up time and cost"
+  type        = string
+  default     = "ON_DEMAND"
 }
 
-module "appstream_stack" {
-  source       = "./modules/appstream/appStream-stack"
-  vpce_id      = module.appstream_vpc_endpoint.id
-  name_prefix  = local.name_prefix
-  default_tags = local.default_tags
-
-  depends_on = [
-    module.appstream_vpc_endpoint
-  ]
+variable "desired_fleet_instances_count" {
+  description = "Desired number of instances in the AppStream fleet"
+  type        = number
+  default     = 1
 }
 
-resource "aws_appstream_fleet_stack_association" "this" {
-  fleet_name = module.appstream_fleet.name
-  stack_name = module.appstream_stack.name
-
-  depends_on = [
-    module.appstream_stack,
-    module.appstream_fleet
-  ]
-
+variable "max_user_duration_in_seconds" {
+  description = "Maximum amount of time that a streaming session can remain active, in seconds. Maximum possible duration is 96 hours"
+  type        = number
+  default     = 1800  
 }
- 
+
+variable "disconnect_timeout_in_seconds" {
+  description = "Amount of time that a streaming session remains active after users disconnect, in seconds. If users do not logout and try to reconnect within this time interval, they are connected to their previous session"
+  type        = number
+  default     = 1800  
+}
+
+variable "idle_disconnect_timeout_in_seconds" {
+  description = "Amount of time that users can be idle before they are disconnected from their streaming session, in seconds"
+  type        = number
+  default     = 60
+}
+
+variable "image_name" {
+  description = "Name of the image from which to build the fleet"
+  type        = string
+  default     = "Amazon-AppStream2-Sample-Image-02-04-2019"
+}
+
+variable "instance_type" {
+  description = "Type and size of the fleet instance"
+  type        = string
+  default     = "stream.standard.medium"
+}
+
+variable "security_group_cidrs" {
+  description = "The CIDRs to which traffic can be routed"
+  type        = list(string)
+}
+
+variable "name_prefix" {
+  description = "Prefix for resource names and tags"
+  default     = ""
+}
+
+variable "default_tags" {
+  description = "Map of default tags required by FIS Sentinel policies"
+  type = map(string)
+  default = {}
+}
