@@ -1,67 +1,59 @@
-variable "vpc_id" {
-  description = "Value of the VPC ID"
-  type        = string
+resource "aws_security_group" "appstream_fleet" {
+  name        = "${var.name_prefix}appstream_fleet_sg"
+  description = "AppStream Fleet Security Group"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description      = "Allow Https"
+    from_port        = 443
+    to_port          = 443
+    protocol         = "tcp"
+    cidr_blocks      = var.security_group_cidrs
+  }
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+  }
+
+  tags = merge(var.default_tags, {
+    Name = "${var.name_prefix}appstream_fleet_sg"
+  })
+
 }
 
-variable "subnet_ids" {
-  description = "IDs of the subnets in which the image builder needs to be created"
-  type        = list(string)
-}
+resource "aws_appstream_fleet" "application_fleet" {
+  name = "${var.name_prefix}appstream_fleet"
 
-variable "fleet_type" {
-  description = "Type of the fleet instance that determines the start-up time and cost"
-  type        = string
-  default     = "ON_DEMAND"
-}
+  compute_capacity {
+    desired_instances = var.desired_fleet_instances_count
+  }
 
-variable "desired_fleet_instances_count" {
-  description = "Desired number of instances in the AppStream fleet"
-  type        = number
-  default     = 1
-}
+  description                        = "AppStream fleet for application client"
+  display_name                       = "AppStream fleet for application client"
+  enable_default_internet_access     = false
+  fleet_type                         = var.fleet_type
+  image_name                         = var.image_name
+  instance_type                      = var.instance_type
+  max_user_duration_in_seconds       = var.max_user_duration_in_seconds
+  disconnect_timeout_in_seconds      = var.disconnect_timeout_in_seconds
+  idle_disconnect_timeout_in_seconds = var.idle_disconnect_timeout_in_seconds
 
-variable "max_user_duration_in_seconds" {
-  description = "Maximum amount of time that a streaming session can remain active, in seconds. Maximum possible duration is 96 hours"
-  type        = number
-  default     = 1800  
-}
+  vpc_config {
+    subnet_ids         = var.subnet_ids
+    security_group_ids = [aws_security_group.appstream_fleet.id]
+  }
 
-variable "disconnect_timeout_in_seconds" {
-  description = "Amount of time that a streaming session remains active after users disconnect, in seconds. If users do not logout and try to reconnect within this time interval, they are connected to their previous session"
-  type        = number
-  default     = 1800  
-}
+  # domain_join_info {
+  #  directory_name = 
+  # }
 
-variable "idle_disconnect_timeout_in_seconds" {
-  description = "Amount of time that users can be idle before they are disconnected from their streaming session, in seconds"
-  type        = number
-  default     = 60
-}
+  # iam_role_arn = 
 
-variable "image_name" {
-  description = "Name of the image from which to build the fleet"
-  type        = string
-  default     = "Amazon-AppStream2-Sample-Image-02-04-2019"
-}
+  tags = merge(var.default_tags, {
+    Name = "${var.name_prefix}appstream_fleet"
+  })
 
-variable "instance_type" {
-  description = "Type and size of the fleet instance"
-  type        = string
-  default     = "stream.standard.medium"
-}
-
-variable "security_group_cidrs" {
-  description = "The CIDRs to which traffic can be routed"
-  type        = list(string)
-}
-
-variable "name_prefix" {
-  description = "Prefix for resource names and tags"
-  default     = ""
-}
-
-variable "default_tags" {
-  description = "Map of default tags required by FIS Sentinel policies"
-  type = map(string)
-  default = {}
 }
